@@ -3,7 +3,7 @@ name: GitHub Trending Weekly Digest
 on:
   schedule:
     # 北京时间每周一上午 9:00 (UTC 1:00)
-    - cron: '0 1 * * 1'
+    - cron: '0 12 * * 5'
   workflow_dispatch:  # 支持手动触发
 
 jobs:
