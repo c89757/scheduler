@@ -18,30 +18,34 @@ def build_email_html(repos, since):
     period = period_map.get(since, since)
     
     items_html = ""
-    for i, repo in enumerate(repos[:20], 1):  # 取前20个
-        # 从接口返回的数据结构提取信息
-        name = repo.get("fullName") or f"{repo.get('author')}/{repo.get('name')}"
-        description = repo.get("description", "") or ""
-        language = repo.get("language", "") or ""
-        stars = repo.get("stars", 0)
-        stars_today = repo.get("currentPeriodStars", 0)
-        url = repo.get("url", f"https://github.com/{name}")
-        forks = repo.get("forks", 0)
-        
-        lang_badge = f'<span style="color:#6e7681;margin-left:8px;">● {language}</span>' if language else ""
-        
-        items_html += f"""
-        <tr>
-            <td style="padding:16px;border-bottom:1px solid #30363d;">
-                <div style="font-size:16px;font-weight:600;">
-                    <a href="{url}" style="color:#58a6ff;text-decoration:none;">{name}</a>
-                </div>
-                <div style="color:#8b949e;margin:6px 0;font-size:14px;">{description}</div>
-                <div style="font-size:12px;color:#6e7681;margin-top:8px;">
-                    ⭐ {stars:,} · 📈 {stars_today:,} stars today · 🍴 {forks:,}{lang_badge}
-                </div>
-            </td>
-        </tr>"""
+   for i, repo in enumerate(repos[:20], 1):
+    name = repo.get("fullName") or f"{repo.get('author')}/{repo.get('name')}"
+    description = repo.get("description", "") or ""
+    language = repo.get("language", "") or ""
+    stars = repo.get("stars", 0)
+    stars_today = repo.get("currentPeriodStars", 0)
+    url = repo.get("url", f"https://github.com/{name}")
+    forks = repo.get("forks", 0)
+    
+    # 提前格式化好数字，避免 f-string 中的语法冲突
+    stars_str = f"{stars:,}"
+    stars_today_str = f"{stars_today:,}"
+    forks_str = f"{forks:,}"
+    
+    lang_badge = f'<span style="color:#6e7681;margin-left:8px;">● {language}</span>' if language else ""
+    
+    items_html += f"""
+    <tr>
+        <td style="padding:16px;border-bottom:1px solid #30363d;">
+            <div style="font-size:16px;font-weight:600;">
+                <a href="{url}" style="color:#58a6ff;text-decoration:none;">{name}</a>
+            </div>
+            <div style="color:#8b949e;margin:6px 0;font-size:14px;">{description}</div>
+            <div style="font-size:12px;color:#6e7681;margin-top:8px;">
+                ⭐ {stars_str} · 📈 {stars_today_str} stars today · 🍴 {forks_str}{lang_badge}
+            </div>
+        </td>
+    </tr>"""
     
     html = f"""
     <html>
