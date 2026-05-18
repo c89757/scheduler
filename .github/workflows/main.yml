@@ -1,0 +1,32 @@
+name: GitHub Trending Weekly Digest
+
+on:
+  schedule:
+    # 北京时间每周一上午 9:00 (UTC 1:00)
+    - cron: '0 1 * * 1'
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  send-trending:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          SINCE: weekly  # 可改为 daily 或 monthly
+        run: python send_trending.py
